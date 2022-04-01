@@ -1,0 +1,2 @@
+# GraphRNNReproducability
+Reproducing GraphRNN paper
