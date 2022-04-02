@@ -6,7 +6,9 @@ import torch.nn.functional as F
 import torch.nn.init as init
 from torch.nn.utils.rnn import pad_packed_sequence, pack_padded_sequence
 
+device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
 
+# a deterministic linear output
 class MLP_plain(nn.Module):
     def __init__(self, h_size, embedding_size, y_size):
         super(MLP_plain, self).__init__()
@@ -24,9 +26,9 @@ class MLP_plain(nn.Module):
         y = self.deterministic_output(h)
         return y
 
-
 if __name__ == "__main__":
-    _mlp_plain = MLP_plain(16, 32, 8)
-    _input = torch.randn(16, 32)
+    print("device:", device)
+    _mlp_plain = MLP_plain(16, 32, 8).to(device)
+    _input = torch.randn(16).to(device)
     _output = _mlp_plain(_input)
     print(_output.shape)
