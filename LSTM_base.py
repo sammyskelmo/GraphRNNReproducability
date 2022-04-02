@@ -6,14 +6,12 @@ import torch.nn.init as init
 
 
 class LSTM_base(nn.Module):
-    def __init__(self, input_size, embedding_size, hidden_size, num_layers, has_input=True, has_output=False, output_size=None):
+    def __init__(self, input_size, embedding_size, hidden_size, num_layers):
         super(LSTM_base, self).__init__()
         self.input_size = input_size
         self.embedding_size = embedding_size
         self.num_layers = num_layers
         self.hidden_size = hidden_size
-        self.has_input = has_input
-        self.has_output = has_output
 
         self.input = nn.Linear(self.input_size, self.embedding_size)
         self.rnn = nn.LSTM(input_size=self.embedding_size, hidden_size=self.hidden_size,
