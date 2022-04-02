@@ -47,3 +47,8 @@ def load_graph_dataset(name='ENZYMES', min_num_nodes=20, max_num_nodes=1000, nod
     
     print('Loaded', graph_num, 'graphs for dataset', name)
     return graphs
+
+
+def bfs(G, start_id):
+    # return a list containing the bfs sequence
+    return list(nx.bfs_tree(G, start_id))
