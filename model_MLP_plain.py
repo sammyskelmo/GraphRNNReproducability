@@ -27,6 +27,6 @@ class MLP_plain(nn.Module):
 
 if __name__ == "__main__":
     _mlp_plain = MLP_plain(16, 32, 8)
-    _input = torch.randn(16, 32)
+    _input = torch.randn(16)
     _output = _mlp_plain(_input)
     print(_output.shape)
