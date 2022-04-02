@@ -82,7 +82,7 @@ def Graph_load_batch(min_num_nodes=20, max_num_nodes=1000, name='ENZYMES', node_
 
 
 def test_graph_load_DD():
-    graphs, max_num_nodes = Graph_load_batch(
+    graphs = Graph_load_batch(
         min_num_nodes=10, name='DD', node_attributes=False, graph_labels=True)
     shuffle(graphs)
     plt.switch_backend('agg')
@@ -92,7 +92,10 @@ def test_graph_load_DD():
     row = 4
     col = 4
     draw_graph_list(graphs[0:row*col], row=row, col=col, fname='figures/test')
-    print('max num nodes', max_num_nodes)
+    # print('max num nodes', max_num_nodes)
+
+
+# test_graph_load_DD()
 
 
 def parse_index_file(filename):
@@ -140,23 +143,23 @@ def Graph_load(dataset='cora'):
 
 
 ######### code test ########
-# adj, features,G = Graph_load()
+# adj, features, G = Graph_load()
 # print(adj)
 # print(G.number_of_nodes(), G.number_of_edges())
 
-# _,_,G = Graph_load(dataset='citeseer')
+# _, _, G = Graph_load(dataset='citeseer')
 # G = max(nx.connected_component_subgraphs(G), key=len)
 # G = nx.convert_node_labels_to_integers(G)
-#
+
 # count = 0
 # max_node = 0
 # for i in range(G.number_of_nodes()):
 #     G_ego = nx.ego_graph(G, i, radius=3)
 #     # draw_graph(G_ego,prefix='test'+str(i))
 #     m = G_ego.number_of_nodes()
-#     if m>max_node:
+#     if m > max_node:
 #         max_node = m
-#     if m>=50:
+#     if m >= 50:
 #         print(i, G_ego.number_of_nodes(), G_ego.number_of_edges())
 #         count += 1
 # print('count', count)
