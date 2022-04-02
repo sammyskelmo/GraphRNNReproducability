@@ -66,6 +66,7 @@ class GRU_base(nn.Module):
                 # m.weight.data = init.xavier_uniform(m.weight.data, gain=nn.init.calculate_gain('relu'))
 
     def init_hidden(self, batch_size):
+        ''' caution: the output tensor needs to be sent to the right device '''
         return Variable(torch.zeros(self.num_layers, batch_size, self.hidden_size))
 
     ### TODO : add pack_padded_sequence, understand what packing is for and does
