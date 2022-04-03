@@ -250,7 +250,7 @@ def sample_sigmoid(y, sample, thresh=0.5, sample_time=2):
     '''
 
     # do sigmoid first
-    y = F.sigmoid(y)
+    y = torch.sigmoid(y)
     # do sampling
     if sample:
         if sample_time > 1:
@@ -295,7 +295,7 @@ def test_mlp_epoch(epoch, args, rnn, output, test_batch_size=16, save_histogram=
     for i in range(max_num_node):
         h = rnn(x_step)
         y_pred_step = output(h)
-        y_pred[:, i:i + 1, :] = F.sigmoid(y_pred_step)
+        y_pred[:, i:i + 1, :] = torch.sigmoid(y_pred_step)
         x_step = sample_sigmoid(y_pred_step, sample=True,
                                 sample_time=sample_time)
         y_pred_long[:, i:i + 1, :] = x_step
@@ -344,8 +344,10 @@ def train_rnn_epoch(epoch, args, rnn, output, data_loader,
         # print('y',y.size())
         # print('output_y',output_y.size())
         rnn.hidden = rnn.init_hidden(batch_size=x.size(0))
+
         # if using ground truth to train
-        h = rnn(x)
+        h = rnn(x, pack=True, input_len=y_len)
+
         # get packed hidden vector
         h = pack_padded_sequence(h, y_len, batch_first=True).data
         # reverse h
@@ -357,104 +359,10 @@ def train_rnn_epoch(epoch, args, rnn, output, data_loader,
         # num_layers, batch_size, hidden_size
         output.hidden = torch.cat(
             (h.view(1, h.size(0), h.size(1)), hidden_null), dim=0)
-        y_pred = output(output_x, output_y_len)  # number of arguments error
-        # y_pred = output(output_x) #mismatched dimension
-        y_pred = F.sigmoid(y_pred)
-        # clean
-        y_pred = pack_padded_sequence(y_pred, output_y_len, batch_first=True)
-        y_pred = pad_packed_sequence(y_pred, batch_first=True)[0]
-        output_y = pack_padded_sequence(
-            output_y, output_y_len, batch_first=True)
-        output_y = pad_packed_sequence(output_y, batch_first=True)[0]
-        # use cross entropy loss
-        loss = binary_cross_entropy_weight(y_pred, output_y)
-        loss.backward()
-        # update deterministic and lstm
-        optimizer_output.step()
-        optimizer_rnn.step()
-        scheduler_output.step()
-        scheduler_rnn.step()
 
-        if epoch % args.epochs_log == 0 and batch_idx == 0:  # only output first batch's statistics
-            print('Epoch: {}/{}, train loss: {:.6f}, graph type: {}, num_layer: {}, hidden: {}'.format(
-                epoch, args.epochs, loss.data[0], args.graph_type, args.num_layers, args.hidden_size_rnn))
-
-        feature_dim = y.size(1)*y.size(2)
-        loss_sum += loss.data[0]*feature_dim
-    return loss_sum/(batch_idx+1)
-
-
-def train_rnn_epoch_original(epoch, args, rnn, output, data_loader,
-                             optimizer_rnn, optimizer_output,
-                             scheduler_rnn, scheduler_output):
-    rnn.train()
-    output.train()
-    loss_sum = 0
-    for batch_idx, data in enumerate(data_loader):
-        rnn.zero_grad()
-        output.zero_grad()
-        x_unsorted = data['x'].float()
-        y_unsorted = data['y'].float()
-        print(data['len'])
-        y_len_unsorted = data['len']
-        y_len_max = max(y_len_unsorted)
-        x_unsorted = x_unsorted[:, 0:y_len_max, :]
-        y_unsorted = y_unsorted[:, 0:y_len_max, :]
-        # initialize lstm hidden state according to batch size
-        rnn.hidden = rnn.init_hidden(batch_size=x_unsorted.size(0))
-        # output.hidden = output.init_hidden(batch_size=x_unsorted.size(0)*x_unsorted.size(1))
-
-        # sort input
-        y_len, sort_index = torch.sort(y_len_unsorted, 0, descending=True)
-        y_len = y_len.numpy().tolist()
-        x = torch.index_select(x_unsorted, 0, sort_index)
-        y = torch.index_select(y_unsorted, 0, sort_index)
-
-        # input, output for output rnn module
-        # a smart use of pytorch builtin function: pack variable--b1_l1,b2_l1,...,b1_l2,b2_l2,...
-        y_reshape = pack_padded_sequence(y, y_len, batch_first=True).data
-        # reverse y_reshape, so that their lengths are sorted, add dimension
-        idx = [i for i in range(y_reshape.size(0)-1, -1, -1)]
-        idx = torch.LongTensor(idx)
-        y_reshape = y_reshape.index_select(0, idx)
-        y_reshape = y_reshape.view(y_reshape.size(0), y_reshape.size(1), 1)
-
-        output_x = torch.cat(
-            (torch.ones(y_reshape.size(0), 1, 1), y_reshape[:, 0:-1, 0:1]), dim=1)
-        output_y = y_reshape
-        # batch size for output module: sum(y_len)
-        output_y_len = []
-        output_y_len_bin = np.bincount(np.array(y_len))
-        for i in range(len(output_y_len_bin)-1, 0, -1):
-            # count how many y_len is above i
-            count_temp = np.sum(output_y_len_bin[i:])
-            # put them in output_y_len; max value should not exceed y.size(2)
-            output_y_len.extend([min(i, y.size(2))]*count_temp)
-        # pack into variable
-        x = Variable(x).cuda()
-        y = Variable(y).cuda()
-        output_x = Variable(output_x).cuda()
-        output_y = Variable(output_y).cuda()
-        # print(output_y_len)
-        # print('len',len(output_y_len))
-        # print('y',y.size())
-        # print('output_y',output_y.size())
-
-        # if using ground truth to train
-        h = rnn(x, pack=True, input_len=y_len)
-        # get packed hidden vector
-        h = pack_padded_sequence(h, y_len, batch_first=True).data
-        # reverse h
-        idx = [i for i in range(h.size(0) - 1, -1, -1)]
-        idx = Variable(torch.LongTensor(idx)).cuda()
-        h = h.index_select(0, idx)
-        hidden_null = Variable(torch.zeros(
-            args.num_layers-1, h.size(0), h.size(1))).cuda()
-        # num_layers, batch_size, hidden_size
-        output.hidden = torch.cat(
-            (h.view(1, h.size(0), h.size(1)), hidden_null), dim=0)
         y_pred = output(output_x, pack=True, input_len=output_y_len)
-        y_pred = F.sigmoid(y_pred)
+
+        y_pred = torch.sigmoid(y_pred)
         # clean
         y_pred = pack_padded_sequence(y_pred, output_y_len, batch_first=True)
         y_pred = pad_packed_sequence(y_pred, batch_first=True)[0]
@@ -472,13 +380,10 @@ def train_rnn_epoch_original(epoch, args, rnn, output, data_loader,
 
         if epoch % args.epochs_log == 0 and batch_idx == 0:  # only output first batch's statistics
             print('Epoch: {}/{}, train loss: {:.6f}, graph type: {}, num_layer: {}, hidden: {}'.format(
-                epoch, args.epochs, loss.data[0], args.graph_type, args.num_layers, args.hidden_size_rnn))
+                epoch, args.epochs, loss.data, args.graph_type, args.num_layers, args.hidden_size_rnn))
 
-        # logging
-        log_value('loss_'+args.fname,
-                  loss.data[0], epoch*args.batch_ratio+batch_idx)
         feature_dim = y.size(1)*y.size(2)
-        loss_sum += loss.data[0]*feature_dim
+        loss_sum += loss.data*feature_dim
     return loss_sum/(batch_idx+1)
 
 
@@ -616,10 +521,11 @@ def test_train_rnn_Penny():
                                                  sampler=sample_strategy)
 
     rnn = GRU_base(input_size=args.max_prev_node, embedding_size=args.embedding_size_rnn,
-                   hidden_size=args.hidden_size_rnn, num_layers=args.num_layers, prepend_linear_layer=True,
-                   append_linear_layers=False).to(device)
+                        hidden_size=args.hidden_size_rnn, num_layers=args.num_layers, prepend_linear_layer=True,
+                        append_linear_layers=True, append_linear_output_size=args.hidden_size_rnn_output).to(device)
     output = GRU_base(input_size=1, embedding_size=args.embedding_size_rnn_output,
-                      hidden_size=args.hidden_size_rnn_output, num_layers=args.num_layers).to(device)
+                           hidden_size=args.hidden_size_rnn_output, num_layers=args.num_layers, prepend_linear_layer=True,
+                           append_linear_layers=True, append_linear_output_size=1).to(device)
 
     epoch = 1
 
