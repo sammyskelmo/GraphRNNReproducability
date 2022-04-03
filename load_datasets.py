@@ -55,6 +55,72 @@ def load_graph_dataset(name='ENZYMES', min_num_nodes=20, max_num_nodes=1000, nod
     return graphs
 
 
+def reformat_data(data):
+    x = data['x']
+    y = data['y']
+    length = data['len']
+
+    x_unsorted = x.float()
+    y_unsorted = y.float()
+    y_len_unsorted = length
+    y_len_max = max(y_len_unsorted)
+    x_unsorted = x_unsorted[:, 0:y_len_max, :]
+    y_unsorted = y_unsorted[:, 0:y_len_max, :]
+
+    # sort input
+    y_len, sort_index = torch.sort(y_len_unsorted, 0, descending=True)
+    y_len = y_len.numpy().tolist()
+    x = torch.index_select(x_unsorted, 0, sort_index)
+    y = torch.index_select(y_unsorted, 0, sort_index)
+
+    # input, output for output rnn module
+    # a smart use of pytorch builtin function: pack variable--b1_l1,b2_l1,...,b1_l2,b2_l2,...
+    y_reshape = pack_padded_sequence(y, y_len, batch_first=True).data
+    # reverse y_reshape, so that their lengths are sorted, add dimension
+    idx = [i for i in range(y_reshape.size(0)-1, -1, -1)]
+    idx = torch.LongTensor(idx)
+    y_reshape = y_reshape.index_select(0, idx)
+    y_reshape = y_reshape.view(y_reshape.size(0), y_reshape.size(1), 1)
+
+    output_x = torch.cat(
+        (torch.ones(y_reshape.size(0), 1, 1), y_reshape[:, 0:-1, 0:1]), dim=1)
+    output_y = y_reshape
+    # batch size for output module: sum(y_len)
+    output_y_len = []
+    output_y_len_bin = np.bincount(np.array(y_len))
+    for i in range(len(output_y_len_bin)-1, 0, -1):
+        # count how many y_len is above i
+        count_temp = np.sum(output_y_len_bin[i:])
+        # put them in output_y_len; max value should not exceed y.size(2)
+        output_y_len.extend([min(i, y.size(2))]*count_temp)
+
+    return {"x": x, "y": y, "output_x": output_x, "output_y": output_y, "y_len": y_len, "output_y_len": output_y_len}
+
+
+def bfs_seq(G, start_id):
+    '''
+    get a bfs node sequence
+    :param G:
+    :param start_id:
+    :return:
+    '''
+    dictionary = dict(nx.bfs_successors(G, start_id))
+    start = [start_id]
+    output = [start_id]
+    while len(start) > 0:
+        next = []
+        while len(start) > 0:
+            current = start.pop(0)
+            neighbor = dictionary.get(current)
+            if neighbor is not None:
+                # a wrong example, should not permute here!
+                # shuffle(neighbor)
+                next = next + neighbor
+        output = output + next
+        start = next
+    return output
+
+
 def bfs(G, start_id):
     # return a list containing the bfs sequence
     return list(nx.bfs_tree(G, start_id))
@@ -142,7 +208,6 @@ class Graph_sequence_sampler_pytorch(torch.utils.data.Dataset):
 
     def __getitem__(self, idx):
         adj_copy = self.adj_all[idx].copy()
-        # here zeros are padded for small graph
         x_batch = np.zeros((self.n, self.max_prev_node))
         x_batch[0, :] = 1  # the first input token is all ones
         # here zeros are padded for small graph
@@ -155,7 +220,7 @@ class Graph_sequence_sampler_pytorch(torch.utils.data.Dataset):
         G = nx.from_numpy_matrix(adj_copy_matrix)
         # then do bfs in the permuted G
         start_idx = np.random.randint(adj_copy.shape[0])
-        x_idx = np.array(bfs_seq(G, start_idx))
+        x_idx = np.array(bfs(G, start_idx))
         adj_copy = adj_copy[np.ix_(x_idx, x_idx)]
         adj_encoded = encode_adj(
             adj_copy.copy(), max_prev_node=self.max_prev_node)
@@ -163,47 +228,12 @@ class Graph_sequence_sampler_pytorch(torch.utils.data.Dataset):
         # for small graph the rest are zero padded
         y_batch[0:adj_encoded.shape[0], :] = adj_encoded
         x_batch[1:adj_encoded.shape[0] + 1, :] = adj_encoded
-        # return {'x': x_batch, 'y': y_batch, 'len': len_batch}
-        x, y, output_x, output_y = self.reformat_data(
-            x_batch, y_batch, len_batch)
-        return x, y, output_x, output_y
-
-    def reformat_data(x, y, length):
-        x_unsorted = x.float()
-        y_unsorted = y.float()
-        y_len_unsorted = length
-        y_len_max = max(y_len_unsorted)
-        x_unsorted = x_unsorted[:, 0:y_len_max, :]
-        y_unsorted = y_unsorted[:, 0:y_len_max, :]
-
-        # sort input
-        y_len, sort_index = torch.sort(y_len_unsorted, 0, descending=True)
-        y_len = y_len.numpy().tolist()
-        x = torch.index_select(x_unsorted, 0, sort_index)
-        y = torch.index_select(y_unsorted, 0, sort_index)
-
-        # input, output for output rnn module
-        # a smart use of pytorch builtin function: pack variable--b1_l1,b2_l1,...,b1_l2,b2_l2,...
-        y_reshape = pack_padded_sequence(y, y_len, batch_first=True).data
-        # reverse y_reshape, so that their lengths are sorted, add dimension
-        idx = [i for i in range(y_reshape.size(0)-1, -1, -1)]
-        idx = torch.LongTensor(idx)
-        y_reshape = y_reshape.index_select(0, idx)
-        y_reshape = y_reshape.view(y_reshape.size(0), y_reshape.size(1), 1)
-
-        output_x = torch.cat(
-            (torch.ones(y_reshape.size(0), 1, 1), y_reshape[:, 0:-1, 0:1]), dim=1)
-        output_y = y_reshape
-        # batch size for output module: sum(y_len)
-        output_y_len = []
-        output_y_len_bin = np.bincount(np.array(y_len))
-        for i in range(len(output_y_len_bin)-1, 0, -1):
-            # count how many y_len is above i
-            count_temp = np.sum(output_y_len_bin[i:])
-            # put them in output_y_len; max value should not exceed y.size(2)
-            output_y_len.extend([min(i, y.size(2))]*count_temp)
-
-        return x, y, output_x, output_y
+        # x_batch = torch.tensor(x_batch)
+        # y_batch = torch.tensor(y_batch)
+        return {'x': x_batch, 'y': y_batch, 'len': len_batch}
+        # x, y, output_x, output_y, y_len, output_y_len = self.reformat_data(
+        #     x_batch, y_batch, len_batch)
+        # return {"x": x, "y": y, "output_x": output_x, "output_y": output_y, "y_len": y_len, "output_y_len": output_y_len}
 
     def calc_max_prev_node(self, iter=20000, topk=10):
         max_prev_node = []
