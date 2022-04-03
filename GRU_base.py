@@ -4,6 +4,7 @@ from torch.nn import functional as F
 from torch.autograd import Variable
 from torch.nn import init
 import numpy as np
+from torch.nn.utils.rnn import pad_packed_sequence, pack_padded_sequence
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
@@ -71,14 +72,16 @@ class GRU_base(nn.Module):
         return Variable(torch.zeros(self.num_layers, batch_size, self.hidden_size)).to(device)
 
     ### TODO : add pack_padded_sequence, understand what packing is for and does
-    def forward(self, base_input):
+    def forward(self, base_input, pack=False, input_len=None):
         if self.prepend_linear_layer:
             input = F.relu(self.input(base_input))
         else:
             input = base_input
-
+        if pack:
+            input = pack_padded_sequence(input, input_len, batch_first=True)
         output, self.hidden = self.rnn(input, self.hidden)
-        
+        if pack:
+            output = pad_packed_sequence(output, batch_first=True)[0]
         if self.append_linear_layers:
             output = self.output(output)
 
