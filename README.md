@@ -3,5 +3,5 @@ Reproducing GraphRNN paper
 
 ## Train
 ```
-nohup python -u train.py &> test.out&
+nohup python -u train.py &> train.out&
 ```
