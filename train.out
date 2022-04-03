@@ -1,0 +1,36 @@
+nohup: ignoring input
+Loaded 600 graphs for dataset ENZYMES
+total graph num: 587, training set: 469
+max number node: 125
+max/min number edge: 149; 16
+max previous node: 25
+Epoch: 10/300, train loss: 0.067760, graph type: grid, num_layer: 4, hidden: 128
+Epoch: 20/300, train loss: 0.066867, graph type: grid, num_layer: 4, hidden: 128
+Epoch: 30/300, train loss: 0.060153, graph type: grid, num_layer: 4, hidden: 128
+Epoch: 40/300, train loss: 0.061722, graph type: grid, num_layer: 4, hidden: 128
+Epoch: 50/300, train loss: 0.071334, graph type: grid, num_layer: 4, hidden: 128
+Epoch: 60/300, train loss: 0.055778, graph type: grid, num_layer: 4, hidden: 128
+Epoch: 70/300, train loss: 0.029101, graph type: grid, num_layer: 4, hidden: 128
+Epoch: 80/300, train loss: 0.066644, graph type: grid, num_layer: 4, hidden: 128
+Epoch: 90/300, train loss: 0.084984, graph type: grid, num_layer: 4, hidden: 128
+Epoch: 100/300, train loss: 0.052736, graph type: grid, num_layer: 4, hidden: 128
+Epoch: 110/300, train loss: 0.063565, graph type: grid, num_layer: 4, hidden: 128
+Epoch: 120/300, train loss: 0.029259, graph type: grid, num_layer: 4, hidden: 128
+Epoch: 130/300, train loss: 0.069753, graph type: grid, num_layer: 4, hidden: 128
+Epoch: 140/300, train loss: 0.068345, graph type: grid, num_layer: 4, hidden: 128
+Epoch: 150/300, train loss: 0.056105, graph type: grid, num_layer: 4, hidden: 128
+Epoch: 160/300, train loss: 0.033209, graph type: grid, num_layer: 4, hidden: 128
+Epoch: 170/300, train loss: 0.069996, graph type: grid, num_layer: 4, hidden: 128
+Epoch: 180/300, train loss: 0.035585, graph type: grid, num_layer: 4, hidden: 128
+Epoch: 190/300, train loss: 0.055539, graph type: grid, num_layer: 4, hidden: 128
+Epoch: 200/300, train loss: 0.073173, graph type: grid, num_layer: 4, hidden: 128
+Epoch: 210/300, train loss: 0.061895, graph type: grid, num_layer: 4, hidden: 128
+Epoch: 220/300, train loss: 0.062213, graph type: grid, num_layer: 4, hidden: 128
+Epoch: 230/300, train loss: 0.055616, graph type: grid, num_layer: 4, hidden: 128
+Epoch: 240/300, train loss: 0.054910, graph type: grid, num_layer: 4, hidden: 128
+Epoch: 250/300, train loss: 0.059605, graph type: grid, num_layer: 4, hidden: 128
+Epoch: 260/300, train loss: 0.052312, graph type: grid, num_layer: 4, hidden: 128
+Epoch: 270/300, train loss: 0.075815, graph type: grid, num_layer: 4, hidden: 128
+Epoch: 280/300, train loss: 0.069345, graph type: grid, num_layer: 4, hidden: 128
+Epoch: 290/300, train loss: 0.062308, graph type: grid, num_layer: 4, hidden: 128
+Epoch: 300/300, train loss: 0.024379, graph type: grid, num_layer: 4, hidden: 128
