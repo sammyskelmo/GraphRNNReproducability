@@ -5,6 +5,7 @@ from torch.autograd import Variable
 from torch.nn import init
 import numpy as np
 
+device = "cuda" if torch.cuda.is_available() else "cpu"
 
 class GRU_base(nn.Module):
     '''
@@ -55,19 +56,19 @@ class GRU_base(nn.Module):
         # in the rnn, xavier for weights, constant 0.25 for biases
         for name, param in self.rnn.named_parameters():
             if 'bias' in name:
-                nn.init.constant(param, 0.25)
+                nn.init.constant_(param, 0.25)
             elif 'weight' in name:
-                nn.init.xavier_uniform(param,gain=nn.init.calculate_gain('sigmoid'))
+                nn.init.xavier_uniform_(param,gain=nn.init.calculate_gain('sigmoid'))
         # in the linear layers, 
         for m in self.modules():
             if isinstance(m, nn.Linear):
                 # could try with and without gain (paper uses gain)
-                m.weight.data = init.xavier_uniform(m.weight.data)
+                m.weight.data = init.xavier_uniform_(m.weight.data)
                 # m.weight.data = init.xavier_uniform(m.weight.data, gain=nn.init.calculate_gain('relu'))
 
     def init_hidden(self, batch_size):
         ''' caution: the output tensor needs to be sent to the right device '''
-        return Variable(torch.zeros(self.num_layers, batch_size, self.hidden_size))
+        return Variable(torch.zeros(self.num_layers, batch_size, self.hidden_size)).to(device)
 
     ### TODO : add pack_padded_sequence, understand what packing is for and does
     def forward(self, base_input):
