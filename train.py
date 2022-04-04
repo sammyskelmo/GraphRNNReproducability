@@ -33,6 +33,13 @@ from args import Args
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
+def create_save_path(_arg):
+    if not os.path.exists(_arg.model_save_path):
+        os.mkdir(_arg.model_save_path)
+    if not os.path.exists(_arg.graph_save_path):
+        os.mkdir(_arg.graph_save_path)
+    if not os.path.exists(_arg.figure_save_path):
+        os.mkdir(_arg.figure_save_path)
 
 def encode_adj(adj, max_prev_node=10, is_full=False):
     '''
@@ -86,6 +93,43 @@ def encode_adj_flexible(adj):
 
     return adj_output
 
+def decode_adj(adj_output):
+    '''
+        recover to adj from adj_output
+        note: here adj_output have shape (n-1)*m
+    '''
+    max_prev_node = adj_output.shape[1]
+    adj = np.zeros((adj_output.shape[0], adj_output.shape[0]))
+    for i in range(adj_output.shape[0]):
+        input_start = max(0, i - max_prev_node + 1)
+        input_end = i + 1
+        output_start = max_prev_node + max(0, i - max_prev_node + 1) - (i + 1)
+        output_end = max_prev_node
+        adj[i, input_start:input_end] = adj_output[i,::-1][output_start:output_end] # reverse order
+    adj_full = np.zeros((adj_output.shape[0]+1, adj_output.shape[0]+1))
+    n = adj_full.shape[0]
+    adj_full[1:n, 0:n-1] = np.tril(adj, 0)
+    adj_full = adj_full + adj_full.T
+
+    return adj_full
+
+def get_graph(adj):
+    '''
+    get a graph from zero-padded adj
+    :param adj:
+    :return:
+    '''
+    # remove all zeros rows and columns
+    adj = adj[~np.all(adj == 0, axis=1)]
+    adj = adj[:, ~np.all(adj == 0, axis=0)]
+    adj = np.asmatrix(adj)
+    G = nx.from_numpy_matrix(adj)
+    return G
+
+# save a list of graphs
+def save_graph_list(G_list, fname):
+    with open(fname, "wb") as f:
+        pickle.dump(G_list, f)
 
 # class Graph_sequence_sampler_pytorch(torch.utils.data.Dataset):
 #     def __init__(self, G_list, max_num_node=None, max_prev_node=None, iteration=20000):
@@ -386,9 +430,45 @@ def train_rnn_epoch(epoch, args, rnn, output, data_loader,
         loss_sum += loss.data*feature_dim
     return loss_sum/(batch_idx+1)
 
+def test_rnn_epoch(epoch, args, rnn, output, test_batch_size=16):
+    rnn.hidden = rnn.init_hidden(test_batch_size)
+    rnn.eval()
+    output.eval()
+
+    # generate graphs
+    max_num_node = int(args.max_num_node)
+    y_pred_long = Variable(torch.zeros(test_batch_size, max_num_node, args.max_prev_node)).cuda() # discrete prediction
+    x_step = Variable(torch.ones(test_batch_size,1,args.max_prev_node)).cuda()
+    for i in range(max_num_node):
+        h = rnn(x_step)
+        # output.hidden = h.permute(1,0,2)
+        hidden_null = Variable(torch.zeros(args.num_layers - 1, h.size(0), h.size(2))).cuda()
+        output.hidden = torch.cat((h.permute(1,0,2), hidden_null),
+                                  dim=0)  # num_layers, batch_size, hidden_size
+        x_step = Variable(torch.zeros(test_batch_size,1,args.max_prev_node)).cuda()
+        output_x_step = Variable(torch.ones(test_batch_size,1,1)).cuda()
+        for j in range(min(args.max_prev_node,i+1)):
+            output_y_pred_step = output(output_x_step)
+            output_x_step = sample_sigmoid(output_y_pred_step, sample=True, sample_time=1)
+            x_step[:,:,j:j+1] = output_x_step
+            output.hidden = Variable(output.hidden.data).cuda()
+        y_pred_long[:, i:i + 1, :] = x_step
+        rnn.hidden = Variable(rnn.hidden.data).cuda()
+    y_pred_long_data = y_pred_long.data.long()
+
+    # save graphs as pickle
+    G_pred_list = []
+    for i in range(test_batch_size):
+        adj_pred = decode_adj(y_pred_long_data[i].cpu().numpy())
+        G_pred = get_graph(adj_pred) # get a graph from zero-padded adj
+        G_pred_list.append(G_pred)
+
+    return G_pred_list
+
 
 def test_train_MLP_Jasper():
     args = Args()
+    create_save_path(args)
 
     # official parameter for ENZYMES
     graphs = load_graph_dataset(min_num_nodes=10, name='ENZYMES')
@@ -455,7 +535,6 @@ def test_train_MLP_Jasper():
         time_end = tm.time()
         time_all[epoch - 1] = time_end - time_start
 
-        '''
         # test
         if epoch % args.epochs_test == 0 and epoch>=args.epochs_test_start:
             for sample_time in range(1,4):
@@ -464,8 +543,10 @@ def test_train_MLP_Jasper():
                     G_pred_step = test_mlp_epoch(epoch, args, rnn, output, test_batch_size=args.test_batch_size,sample_time=sample_time)
                     G_pred.extend(G_pred_step)
                 # save graphs
-                # fname = args.graph_save_path + args.fname_pred + str(epoch) +'_'+str(sample_time) + '.dat'
-                # save_graph_list(G_pred, fname)
+                fname = args.graph_save_path + args.fname_pred + str(epoch) +'_'+str(sample_time) + '.dat'
+                save_graph_list(G_pred, fname)
+                if 'GraphRNN_RNN' in args.note:
+                    break
 
             print('test done, graphs saved')
 
@@ -476,7 +557,7 @@ def test_train_MLP_Jasper():
                 torch.save(rnn.state_dict(), fname)
                 fname = args.model_save_path + args.fname + 'output_' + str(epoch) + '.dat'
                 torch.save(output.state_dict(), fname)
-        '''
+
 
         epoch += 1
 
@@ -485,6 +566,7 @@ def test_train_MLP_Jasper():
 
 def test_train_rnn_Penny():
     args = Args()
+    create_save_path(args)
     # graphs = load_graph_dataset(min_num_nodes=10, name='PROTEINS_full')
     # args.max_prev_node = 230  # M = 230 is suggested by the paper for protein graph
 
@@ -548,6 +630,30 @@ def test_train_rnn_Penny():
 
         time_end = tm.time()
         time_all[epoch - 1] = time_end - time_start
+
+        # test
+        if epoch % args.epochs_test == 0 and epoch >= args.epochs_test_start:
+            for sample_time in range(1, 4):
+                G_pred = []
+                while len(G_pred) < args.test_total_size:
+                    G_pred_step = test_rnn_epoch(epoch, args, rnn, output, test_batch_size=args.test_batch_size)
+                    G_pred.extend(G_pred_step)
+                # save graphs
+                fname = args.graph_save_path + args.fname_pred + str(epoch) + '_' + str(sample_time) + '.dat'
+                save_graph_list(G_pred, fname)
+                if 'GraphRNN_RNN' in args.note:
+                    break
+
+            print('test done, graphs saved')
+
+        # save model checkpoint
+        if args.save:
+            if epoch % args.epochs_save == 0:
+                fname = args.model_save_path + args.fname + 'lstm_' + str(epoch) + '.dat'
+                torch.save(rnn.state_dict(), fname)
+                fname = args.model_save_path + args.fname + 'output_' + str(epoch) + '.dat'
+                torch.save(output.state_dict(), fname)
+
         epoch += 1
 
 
