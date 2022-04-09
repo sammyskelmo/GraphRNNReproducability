@@ -62,7 +62,7 @@ class Args():
         self.num_layers = 4
 
         ### training config
-        self.num_workers = 4 # num workers to load data, default 4
+        self.num_workers = 2 # num workers to load data, default 4
         self.batch_ratio = 32 # how many batches of samples per epoch, default 32, e.g., 1 epoch = 32 batches
         self.epochs = 3000 # now one epoch means self.batch_ratio x batch_size
         self.epochs_test_start = 100

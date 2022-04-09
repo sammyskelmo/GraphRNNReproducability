@@ -18,6 +18,7 @@ import scipy.misc
 import time as tm
 from IPython import embed
 import os
+import math
 
 # from utils import *
 # from model import *
@@ -27,11 +28,14 @@ import os
 from GRU_base import *
 from LSTM_base import *
 from MLP_base import *
+from torch.nn import Transformer
+# from Transformer_base import Transformer
 from load_datasets import *
 from args import Args
 # from model import *
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
+
 
 def create_save_path(_arg):
     if not os.path.exists(_arg.model_save_path):
@@ -40,6 +44,7 @@ def create_save_path(_arg):
         os.mkdir(_arg.graph_save_path)
     if not os.path.exists(_arg.figure_save_path):
         os.mkdir(_arg.figure_save_path)
+
 
 def encode_adj(adj, max_prev_node=10, is_full=False):
     '''
@@ -93,6 +98,7 @@ def encode_adj_flexible(adj):
 
     return adj_output
 
+
 def decode_adj(adj_output):
     '''
         recover to adj from adj_output
@@ -105,13 +111,15 @@ def decode_adj(adj_output):
         input_end = i + 1
         output_start = max_prev_node + max(0, i - max_prev_node + 1) - (i + 1)
         output_end = max_prev_node
-        adj[i, input_start:input_end] = adj_output[i,::-1][output_start:output_end] # reverse order
+        adj[i, input_start:input_end] = adj_output[i, ::-
+                                                   1][output_start:output_end]  # reverse order
     adj_full = np.zeros((adj_output.shape[0]+1, adj_output.shape[0]+1))
     n = adj_full.shape[0]
     adj_full[1:n, 0:n-1] = np.tril(adj, 0)
     adj_full = adj_full + adj_full.T
 
     return adj_full
+
 
 def get_graph(adj):
     '''
@@ -127,6 +135,8 @@ def get_graph(adj):
     return G
 
 # save a list of graphs
+
+
 def save_graph_list(G_list, fname):
     with open(fname, "wb") as f:
         pickle.dump(G_list, f)
@@ -430,6 +440,7 @@ def train_rnn_epoch(epoch, args, rnn, output, data_loader,
         loss_sum += loss.data*feature_dim
     return loss_sum/(batch_idx+1)
 
+
 def test_rnn_epoch(epoch, args, rnn, output, test_batch_size=16):
     rnn.hidden = rnn.init_hidden(test_batch_size)
     rnn.eval()
@@ -437,20 +448,25 @@ def test_rnn_epoch(epoch, args, rnn, output, test_batch_size=16):
 
     # generate graphs
     max_num_node = int(args.max_num_node)
-    y_pred_long = Variable(torch.zeros(test_batch_size, max_num_node, args.max_prev_node)).cuda() # discrete prediction
-    x_step = Variable(torch.ones(test_batch_size,1,args.max_prev_node)).cuda()
+    y_pred_long = Variable(torch.zeros(
+        test_batch_size, max_num_node, args.max_prev_node)).cuda()  # discrete prediction
+    x_step = Variable(torch.ones(
+        test_batch_size, 1, args.max_prev_node)).cuda()
     for i in range(max_num_node):
         h = rnn(x_step)
         # output.hidden = h.permute(1,0,2)
-        hidden_null = Variable(torch.zeros(args.num_layers - 1, h.size(0), h.size(2))).cuda()
-        output.hidden = torch.cat((h.permute(1,0,2), hidden_null),
+        hidden_null = Variable(torch.zeros(
+            args.num_layers - 1, h.size(0), h.size(2))).cuda()
+        output.hidden = torch.cat((h.permute(1, 0, 2), hidden_null),
                                   dim=0)  # num_layers, batch_size, hidden_size
-        x_step = Variable(torch.zeros(test_batch_size,1,args.max_prev_node)).cuda()
-        output_x_step = Variable(torch.ones(test_batch_size,1,1)).cuda()
-        for j in range(min(args.max_prev_node,i+1)):
+        x_step = Variable(torch.zeros(
+            test_batch_size, 1, args.max_prev_node)).cuda()
+        output_x_step = Variable(torch.ones(test_batch_size, 1, 1)).cuda()
+        for j in range(min(args.max_prev_node, i+1)):
             output_y_pred_step = output(output_x_step)
-            output_x_step = sample_sigmoid(output_y_pred_step, sample=True, sample_time=1)
-            x_step[:,:,j:j+1] = output_x_step
+            output_x_step = sample_sigmoid(
+                output_y_pred_step, sample=True, sample_time=1)
+            x_step[:, :, j:j+1] = output_x_step
             output.hidden = Variable(output.hidden.data).cuda()
         y_pred_long[:, i:i + 1, :] = x_step
         rnn.hidden = Variable(rnn.hidden.data).cuda()
@@ -460,7 +476,7 @@ def test_rnn_epoch(epoch, args, rnn, output, test_batch_size=16):
     G_pred_list = []
     for i in range(test_batch_size):
         adj_pred = decode_adj(y_pred_long_data[i].cpu().numpy())
-        G_pred = get_graph(adj_pred) # get a graph from zero-padded adj
+        G_pred = get_graph(adj_pred)  # get a graph from zero-padded adj
         G_pred_list.append(G_pred)
 
     return G_pred_list
@@ -536,14 +552,16 @@ def test_train_MLP_Jasper():
         time_all[epoch - 1] = time_end - time_start
 
         # test
-        if epoch % args.epochs_test == 0 and epoch>=args.epochs_test_start:
-            for sample_time in range(1,4):
+        if epoch % args.epochs_test == 0 and epoch >= args.epochs_test_start:
+            for sample_time in range(1, 4):
                 G_pred = []
-                while len(G_pred)<args.test_total_size:
-                    G_pred_step = test_mlp_epoch(epoch, args, rnn, output, test_batch_size=args.test_batch_size,sample_time=sample_time)
+                while len(G_pred) < args.test_total_size:
+                    G_pred_step = test_mlp_epoch(
+                        epoch, args, rnn, output, test_batch_size=args.test_batch_size, sample_time=sample_time)
                     G_pred.extend(G_pred_step)
                 # save graphs
-                fname = args.graph_save_path + args.fname_pred + str(epoch) +'_'+str(sample_time) + '.dat'
+                fname = args.graph_save_path + args.fname_pred + \
+                    str(epoch) + '_'+str(sample_time) + '.dat'
                 save_graph_list(G_pred, fname)
                 if 'GraphRNN_RNN' in args.note:
                     break
@@ -553,11 +571,12 @@ def test_train_MLP_Jasper():
         # save model checkpoint
         if args.save:
             if epoch % args.epochs_save == 0:
-                fname = args.model_save_path + args.fname + 'lstm_' + str(epoch) + '.dat'
+                fname = args.model_save_path + args.fname + \
+                    'lstm_' + str(epoch) + '.dat'
                 torch.save(rnn.state_dict(), fname)
-                fname = args.model_save_path + args.fname + 'output_' + str(epoch) + '.dat'
+                fname = args.model_save_path + args.fname + \
+                    'output_' + str(epoch) + '.dat'
                 torch.save(output.state_dict(), fname)
-
 
         epoch += 1
 
@@ -603,11 +622,11 @@ def test_train_rnn_Penny():
                                                  sampler=sample_strategy)
 
     rnn = GRU_base(input_size=args.max_prev_node, embedding_size=args.embedding_size_rnn,
-                        hidden_size=args.hidden_size_rnn, num_layers=args.num_layers, prepend_linear_layer=True,
-                        append_linear_layers=True, append_linear_output_size=args.hidden_size_rnn_output).to(device)
+                   hidden_size=args.hidden_size_rnn, num_layers=args.num_layers, prepend_linear_layer=True,
+                   append_linear_layers=True, append_linear_output_size=args.hidden_size_rnn_output).to(device)
     output = GRU_base(input_size=1, embedding_size=args.embedding_size_rnn_output,
-                           hidden_size=args.hidden_size_rnn_output, num_layers=args.num_layers, prepend_linear_layer=True,
-                           append_linear_layers=True, append_linear_output_size=1).to(device)
+                      hidden_size=args.hidden_size_rnn_output, num_layers=args.num_layers, prepend_linear_layer=True,
+                      append_linear_layers=True, append_linear_output_size=1).to(device)
 
     epoch = 1
 
@@ -636,10 +655,12 @@ def test_train_rnn_Penny():
             for sample_time in range(1, 4):
                 G_pred = []
                 while len(G_pred) < args.test_total_size:
-                    G_pred_step = test_rnn_epoch(epoch, args, rnn, output, test_batch_size=args.test_batch_size)
+                    G_pred_step = test_rnn_epoch(
+                        epoch, args, rnn, output, test_batch_size=args.test_batch_size)
                     G_pred.extend(G_pred_step)
                 # save graphs
-                fname = args.graph_save_path + args.fname_pred + str(epoch) + '_' + str(sample_time) + '.dat'
+                fname = args.graph_save_path + args.fname_pred + \
+                    str(epoch) + '_' + str(sample_time) + '.dat'
                 save_graph_list(G_pred, fname)
                 if 'GraphRNN_RNN' in args.note:
                     break
@@ -649,13 +670,170 @@ def test_train_rnn_Penny():
         # save model checkpoint
         if args.save:
             if epoch % args.epochs_save == 0:
-                fname = args.model_save_path + args.fname + 'lstm_' + str(epoch) + '.dat'
+                fname = args.model_save_path + args.fname + \
+                    'lstm_' + str(epoch) + '.dat'
                 torch.save(rnn.state_dict(), fname)
-                fname = args.model_save_path + args.fname + 'output_' + str(epoch) + '.dat'
+                fname = args.model_save_path + args.fname + \
+                    'output_' + str(epoch) + '.dat'
                 torch.save(output.state_dict(), fname)
 
         epoch += 1
 
+class PositionalEncoding(nn.Module):
+    def __init__(self, d_model, dropout=0.1, max_len=5000):
+        super(PositionalEncoding, self).__init__()
+        self.dropout = nn.Dropout(p=dropout)
+
+        pe = torch.zeros(max_len, d_model)
+        position = torch.arange(0, max_len, dtype=torch.float).unsqueeze(1)
+        div_term = torch.exp(torch.arange(0, d_model, 2).float() *
+                             (-math.log(10000.0) / d_model))
+        pe[:, 0::2] = torch.sin(position * div_term)
+        pe[:, 1::2] = torch.cos(position * div_term)
+        pe = pe.unsqueeze(0).transpose(0, 1)
+        self.register_buffer('pe', pe)
+
+    def forward(self, x):
+        x = x + self.pe[:x.size(0), :]
+        return self.dropout(x)
+
+def train_transformer_epoch(epoch, args, rnn, output, data_loader,
+                    optimizer_rnn, optimizer_output,
+                    scheduler_rnn, scheduler_output):
+    rnn.train()
+    output.train()
+    loss_sum = 0
+    for batch_idx, data in enumerate(data_loader):
+        data = reformat_data(data)
+        rnn.zero_grad()
+        output.zero_grad()
+        x = data['x']
+        y = data['y']
+        y_len = data['y_len']
+        output_x = data['output_x']
+        output_y = data['output_y']
+        output_y_len = data['output_y_len']
+
+        x = x.to(device)
+        y = y.to(device)
+        output_x = output_x.to(device)
+        output_y = output_y.to(device)
+        # print(output_y_len)
+        # print('len',len(output_y_len))
+        # print('y',y.size())
+        # print('output_y',output_y.size())
+        rnn.hidden = rnn.init_hidden(batch_size=x.size(0))
+
+        # if using ground truth to train
+        h = rnn(x, pack=True, input_len=y_len)
+
+        # get packed hidden vector
+        h = pack_padded_sequence(h, y_len, batch_first=True).data
+        # reverse h
+        idx = [i for i in range(h.size(0) - 1, -1, -1)]
+        idx = Variable(torch.LongTensor(idx)).to(device)
+        h = h.index_select(0, idx)
+        hidden_null = Variable(torch.zeros(
+            args.num_layers-1, h.size(0), h.size(1))).to(device)
+        # num_layers, batch_size, hidden_size
+        output_mem = torch.cat(
+            (h.view(1, h.size(0), h.size(1)), hidden_null), dim=0)
+
+        # y_pred = output(output_x, pack=True, input_len=output_y_len)
+        # output is a transformer decoder for next token prediction
+        print('output_y',output_y.size())
+        print('output_mem',output_mem.size())
+        print('output_x',output_x.size())
+        y_pred = output(output_x, torch.ones(128), tgt_mask=output_y)
+        y_pred = torch.sigmoid(y_pred)
+        
+        # use cross entropy loss
+        loss = binary_cross_entropy_weight(y_pred, output_y)
+        loss.backward()
+        # update deterministic and lstm
+        optimizer_output.step()
+        optimizer_rnn.step()
+        scheduler_output.step()
+        scheduler_rnn.step()
+
+        if epoch % args.epochs_log == 0 and batch_idx == 0:  # only output first batch's statistics
+            print('Epoch: {}/{}, train loss: {:.6f}, graph type: {}, num_layer: {}, hidden: {}'.format(
+                epoch, args.epochs, loss.data, args.graph_type, args.num_layers, args.hidden_size_rnn))
+
+        feature_dim = y.size(1)*y.size(2)
+        loss_sum += loss.data*feature_dim
+    return loss_sum/(batch_idx+1)
+
+
+
+def train_transformer_Dev():
+    def split_dataset(data, length, train_pct, valid_pct, test_pct):
+        return data[:int(length*train_pct)], data[int(length*train_pct):int(length*(train_pct+valid_pct))], data[int(length*(train_pct+valid_pct)):]
+
+    def graph_stats(graphs, train, args):
+        edge_counts = [graph.number_of_edges() for graph in graphs]
+        max_num_edge = max(edge_counts)
+        min_num_edge = min(edge_counts)
+        max_num_node = max([graph.number_of_nodes() for graph in graphs])
+        print('total graph num: {}, training set: {}'.format(
+            len(graphs), len(train)))
+        print('max number node: {}'.format(max_num_node))
+        print('max/min number edge: {}; {}'.format(max_num_edge, min_num_edge))
+        print('max previous node: {}'.format(args.max_prev_node))
+        return max_num_node
+
+    # set seed and basic args
+    random.seed(123)
+    args = Args()
+    create_save_path(args)
+    args.max_prev_node = 3
+
+    # load dataset, shuffle
+    graphs = load_graph_dataset(min_num_nodes=10, name='ENZYMES')
+    shuffle(graphs)
+
+    # 60-20-20 split
+    train, valid, test = split_dataset(graphs, len(graphs), 0.6, 0.2, 0.2)
+
+    # get graph statistics, print them
+    args.max_num_node = graph_stats(graphs, train, args)
+
+
+
+    # sample permutations of bfs-order graph adjacency matrices
+    train_sampled = Graph_sequence_sampler_pytorch(train, max_prev_node=args.max_prev_node,
+                                                   max_num_node=args.max_num_node)
+
+    # samples elements from train_sampled uniformly at random, with replacement
+    sample_strategy = torch.utils.data.sampler.WeightedRandomSampler(
+        [1.0 / len(train_sampled)] * len(train_sampled), num_samples=args.batch_size * args.batch_ratio, replacement=True)
+
+    # create data loader
+    dataset_loader = torch.utils.data.DataLoader(
+        train_sampled, batch_size=args.batch_size, num_workers=args.num_workers, sampler=sample_strategy)
+
+    # initialize transformer with defaults
+    tr_first = GRU_base(input_size=args.max_prev_node, embedding_size=args.embedding_size_rnn,
+                   hidden_size=args.hidden_size_rnn, num_layers=args.num_layers, prepend_linear_layer=True,
+                   append_linear_layers=True, append_linear_output_size=args.hidden_size_rnn_output).to(device)
+    tr_out = nn.TransformerDecoder(nn.TransformerDecoderLayer(d_model=128, nhead=4, batch_first=True), 6).to(device)
+
+    # initialize optimizers
+    optimizer_tr_first = optim.Adam(list(tr_first.parameters()), lr=args.lr)
+    optimizer_tr_out = optim.Adam(list(tr_out.parameters()), lr=args.lr)
+
+    # initialize schedulers
+    scheduler_tr_first = MultiStepLR(
+        optimizer_tr_first, milestones=args.milestones, gamma=args.lr_rate)
+    scheduler_tr_out = MultiStepLR(
+        optimizer_tr_out, milestones=args.milestones, gamma=args.lr_rate)
+
+    # training loop
+    for epoch in range(args.epochs):
+        train_transformer_epoch(epoch, args, tr_first, tr_out, dataset_loader,optimizer_tr_first, optimizer_tr_out, scheduler_tr_first, scheduler_tr_out)
 
 if __name__ == '__main__':
-    test_train_rnn_Penny()
+    # test_train_rnn_Penny()
+    print('start training')
+    print(device)
+    train_transformer_Dev()
