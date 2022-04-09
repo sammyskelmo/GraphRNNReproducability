@@ -121,10 +121,15 @@ def bfs_seq(G, start_id):
     return output
 
 
-def bfs(G, start_id):
+def bfs(G, start_id=None, use_max_degree=False):
+
+    if use_max_degree:
+        # identify the node in G with maximum degree
+        d = dict(G.degree())
+        start_id = max(d, key=d.get)
+
     # return a list containing the bfs sequence
     return list(nx.bfs_tree(G, start_id))
-
 
 def encode_adj(adj, max_prev_node=10, is_full=False):
     '''
@@ -220,7 +225,12 @@ class Graph_sequence_sampler_pytorch(torch.utils.data.Dataset):
         G = nx.from_numpy_matrix(adj_copy_matrix)
         # then do bfs in the permuted G
         start_idx = np.random.randint(adj_copy.shape[0])
-        x_idx = np.array(bfs(G, start_idx))
+
+        ### Apr 9: This starts bfs at the node with max degree
+        ### in case of a tie, it picks the node with lower id
+        x_idx = np.array(bfs(G, None, max_degree=True))
+        # x_idx = np.array(bfs(G, start_idx))
+        
         adj_copy = adj_copy[np.ix_(x_idx, x_idx)]
         adj_encoded = encode_adj(
             adj_copy.copy(), max_prev_node=self.max_prev_node)
@@ -249,7 +259,12 @@ class Graph_sequence_sampler_pytorch(torch.utils.data.Dataset):
             G = nx.from_numpy_matrix(adj_copy_matrix)
             # then do bfs in the permuted G
             start_idx = np.random.randint(adj_copy.shape[0])
-            x_idx = np.array(bfs(G, start_idx))
+        
+            ### Apr 9: This starts bfs at the node with max degree
+            ### in case of a tie, it picks the node with lower id
+            x_idx = np.array(bfs(G, None, max_degree=True))
+            # x_idx = np.array(bfs(G, start_idx))
+        
             adj_copy = adj_copy[np.ix_(x_idx, x_idx)]
             # encode adj
             adj_encoded = encode_adj_flexible(adj_copy.copy())
