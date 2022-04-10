@@ -173,6 +173,10 @@ def canonical_node_order(G, start_id=0, mode=None):
         d = dict(G.degree())
         start_id = max(d, key=d.get)
 
+    elif mode == 'bfs_min_deg':
+        d = dict(G.degree())
+        start_id = min(d, key=d.get)
+
     elif mode == 'bfs_random':
         start_id = np.random.choice(G.nodes())
 
