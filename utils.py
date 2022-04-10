@@ -1,15 +1,6 @@
 import networkx as nx
 import numpy as np
-import torch
-import torch.nn as nn
-import torch.nn.init as init
-from torch.autograd import Variable
 import matplotlib.pyplot as plt
-import torch.nn.functional as F
-from torch import optim
-from torch.optim.lr_scheduler import MultiStepLR
-# import node2vec.src.main as nv
-from sklearn.decomposition import PCA
 import community
 import pickle
 import re
