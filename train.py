@@ -20,17 +20,11 @@ from IPython import embed
 import os
 import argparse
 
-# from utils import *
-# from model import *
-# from data import *
-# import create_graphs
-
 from GRU_base import *
 from LSTM_base import *
 from MLP_base import *
 from load_datasets import *
 from args import Args
-# from model import *
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 

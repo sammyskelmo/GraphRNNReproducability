@@ -155,39 +155,30 @@ def reformat_data(data):
 
     return {"x": x, "y": y, "output_x": output_x, "output_y": output_y, "y_len": y_len, "output_y_len": output_y_len}
 
-
-def bfs_seq(G, start_id):
+def canonical_node_order(G, start_id=0, mode=None):
     '''
-    get a bfs node sequence
-    :param G:
-    :param start_id:
-    :return:
+        returns a list of graph nodes in the specified canonical order
+        possible modes:
+        - 'bfs_max_deg' : bfs starting from node with highest degree
+        - 'bfs_random' : bfs starting from a random node
+        - 'bfs_zero': bfs starting from node 0
+        - 'no_bfs': no bfs, just return the nodes in the order they are in the graph
+        - None (default): bfs starting from start_id
     '''
-    return bfs(G, start_id)
-
-    dictionary = dict(nx.bfs_successors(G, start_id))
-    start = [start_id]
-    output = [start_id]
-    while len(start) > 0:
-        next = []
-        while len(start) > 0:
-            current = start.pop(0)
-            neighbor = dictionary.get(current)
-            if neighbor is not None:
-                # a wrong example, should not permute here!
-                # shuffle(neighbor)
-                next = next + neighbor
-        output = output + next
-        start = next
-    return output
-
-
-def bfs(G, start_id, use_max_degree=False):
-    # return a list containing the bfs sequence
-    if use_max_degree:
-        # identify the node in G with maximum degree
+    
+    if mode is 'no_bfs':
+        return list(G.nodes())
+    
+    elif mode == 'bfs_max_deg':
         d = dict(G.degree())
         start_id = max(d, key=d.get)
+
+    elif mode == 'bfs_random':
+        start_id = np.random.choice(G.nodes())
+
+    elif mode == 'bfs_zero':
+        start_id = 0
+
     return list(nx.bfs_tree(G, start_id))
 
 
@@ -285,7 +276,7 @@ class Graph_sequence_sampler_pytorch(torch.utils.data.Dataset):
         G = nx.from_numpy_matrix(adj_copy_matrix)
         # then do bfs in the permuted G
         start_idx = np.random.randint(adj_copy.shape[0])
-        x_idx = np.array(bfs(G, start_idx))
+        x_idx = np.array(canonical_node_order(G, start_idx))
         adj_copy = adj_copy[np.ix_(x_idx, x_idx)]
         adj_encoded = encode_adj(
             adj_copy.copy(), max_prev_node=self.max_prev_node)
@@ -314,7 +305,7 @@ class Graph_sequence_sampler_pytorch(torch.utils.data.Dataset):
             G = nx.from_numpy_matrix(adj_copy_matrix)
             # then do bfs in the permuted G
             start_idx = np.random.randint(adj_copy.shape[0])
-            x_idx = np.array(bfs(G, start_idx))
+            x_idx = np.array(canonical_node_order(G, start_idx))
             adj_copy = adj_copy[np.ix_(x_idx, x_idx)]
             # encode adj
             adj_encoded = encode_adj_flexible(adj_copy.copy())
