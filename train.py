@@ -20,11 +20,17 @@ from IPython import embed
 import os
 import argparse
 
+# from utils import *
+# from model import *
+# from data import *
+# import create_graphs
+
 from GRU_base import *
 from LSTM_base import *
 from MLP_base import *
 from load_datasets import *
 from args import Args
+# from model import *
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
@@ -393,6 +399,7 @@ def test_rnn_epoch(epoch, args, rnn, output, test_batch_size=16):
 
 
 def test_train_MLP_Jasper(args):
+    args = reset_args(args)
     create_save_path(args)
 
     if args.graph_type == 'grid':
@@ -540,6 +547,7 @@ def test_train_MLP_Jasper(args):
 
 
 def test_train_rnn_Penny(args):
+    args = reset_args(args)
     create_save_path(args)
     # graphs = load_graph_dataset(min_num_nodes=10, name='PROTEINS_full')
     # args.max_prev_node = 230  # M = 230 is suggested by the paper for protein graph
@@ -682,6 +690,16 @@ def test_train_rnn_Penny(args):
 
         epoch += 1
 
+def reset_args(_args):
+    _args.fname = _args.note + '_' + _args.graph_type + '_' + str(_args.num_layers) + '_' + str(_args.hidden_size_rnn) + '_'
+    _args.fname_pred = _args.note + '_' + _args.graph_type + '_' + str(_args.num_layers) + '_' + str(
+        _args.hidden_size_rnn) + '_pred_'
+    _args.fname_train = _args.note + '_' + _args.graph_type + '_' + str(_args.num_layers) + '_' + str(
+        _args.hidden_size_rnn) + '_train_'
+    _args.fname_test = _args.note + '_' + _args.graph_type + '_' + str(_args.num_layers) + '_' + str(
+        _args.hidden_size_rnn) + '_test_'
+    _args.fname_baseline = _args.graph_save_path + _args.graph_type + _args.generator_baseline + '_' + _args.metric_baseline
+    return _args
 
 if __name__ == '__main__':
     args = Args()
@@ -696,24 +714,16 @@ if __name__ == '__main__':
             args.graph_type = g_type
             print("{:-^60s}".format('LOOP'))
             print('note:', args.note, 'graph_type:', args.graph_type)
-            if args.note == 'GraphRNN_MLP':
+            if 'GraphRNN_MLP' in args.note:
                 test_train_MLP_Jasper(args)
-            elif args.note == 'GraphRNN_MLP_bfs_max':
-                test_train_MLP_Jasper(args)
-            elif args.note == 'GraphRNN_RNN':
-                test_train_rnn_Penny(args)
-            elif args.note == 'GraphRNN_RNN_bfs_max':
+            elif 'GraphRNN_RNN' in args.note:
                 test_train_rnn_Penny(args)
             else:
                 print('note no found')
     else:
-        if args.note == 'GraphRNN_MLP':
+        if 'GraphRNN_MLP' in args.note:
             test_train_MLP_Jasper(args)
-        elif args.note == 'GraphRNN_MLP_bfs_max':
-            test_train_MLP_Jasper(args)
-        elif args.note == 'GraphRNN_RNN':
-            test_train_rnn_Penny(args)
-        elif args.note == 'GraphRNN_RNN_bfs_max':
+        elif 'GraphRNN_RNN' in args.note:
             test_train_rnn_Penny(args)
         else:
             print('note no found')
