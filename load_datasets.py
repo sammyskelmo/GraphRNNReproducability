@@ -3,6 +3,8 @@ import networkx as nx
 import torch
 from torch.nn.utils.rnn import pad_packed_sequence, pack_padded_sequence
 from torch.autograd import Variable
+import pickle as pkl
+import scipy.sparse as sp
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
 
@@ -54,6 +56,63 @@ def load_graph_dataset(name='ENZYMES', min_num_nodes=20, max_num_nodes=1000, nod
     print('Loaded', graph_num, 'graphs for dataset', name)
     return graphs
 
+def parse_index_file(filename):
+    index = []
+    for line in open(filename):
+        index.append(int(line.strip()))
+    return index
+
+def Graph_load(dataset = 'cora'):
+    '''
+    Load a single graph dataset
+    :param dataset: dataset name
+    :return:
+    '''
+    names = ['x', 'tx', 'allx', 'graph']
+    objects = []
+    for i in range(len(names)):
+        load = pkl.load(open("dataset/ind.{}.{}".format(dataset, names[i]), 'rb'), encoding='latin1')
+        # print('loaded')
+        objects.append(load)
+        # print(load)
+    x, tx, allx, graph = tuple(objects)
+    test_idx_reorder = parse_index_file("dataset/ind.{}.test.index".format(dataset))
+    test_idx_range = np.sort(test_idx_reorder)
+
+    if dataset == 'citeseer':
+        # Fix citeseer dataset (there are some isolated nodes in the graph)
+        # Find isolated nodes, add them as zero-vecs into the right position
+        test_idx_range_full = range(min(test_idx_reorder), max(test_idx_reorder) + 1)
+        tx_extended = sp.lil_matrix((len(test_idx_range_full), x.shape[1]))
+        tx_extended[test_idx_range - min(test_idx_range), :] = tx
+        tx = tx_extended
+
+    features = sp.vstack((allx, tx)).tolil()
+    features[test_idx_reorder, :] = features[test_idx_range, :]
+    G = nx.from_dict_of_lists(graph)
+    adj = nx.adjacency_matrix(G)
+    return adj, features, G
+
+def n_community(c_sizes, p_inter=0.01):
+    graphs = [nx.gnp_random_graph(c_sizes[i], 0.7, seed=i) for i in range(len(c_sizes))]
+    G = nx.disjoint_union_all(graphs)
+    communities = list((G.subgraph(c) for c in nx.connected_components(G)))
+    for i in range(len(communities)):
+        subG1 = communities[i]
+        nodes1 = list(subG1.nodes())
+        for j in range(i+1, len(communities)):
+            subG2 = communities[j]
+            nodes2 = list(subG2.nodes())
+            has_inter_edge = False
+            for n1 in nodes1:
+                for n2 in nodes2:
+                    if np.random.rand() < p_inter:
+                        G.add_edge(n1, n2)
+                        has_inter_edge = True
+            if not has_inter_edge:
+                G.add_edge(nodes1[0], nodes2[0])
+    #print('connected comp: ', len(list(nx.connected_component_subgraphs(G))))
+    return G
 
 def reformat_data(data):
     x = data['x']
@@ -104,6 +163,8 @@ def bfs_seq(G, start_id):
     :param start_id:
     :return:
     '''
+    return bfs(G, start_id)
+
     dictionary = dict(nx.bfs_successors(G, start_id))
     start = [start_id]
     output = [start_id]
@@ -121,15 +182,14 @@ def bfs_seq(G, start_id):
     return output
 
 
-def bfs(G, start_id=None, use_max_degree=False):
-
+def bfs(G, start_id, use_max_degree=False):
+    # return a list containing the bfs sequence
     if use_max_degree:
         # identify the node in G with maximum degree
         d = dict(G.degree())
         start_id = max(d, key=d.get)
-
-    # return a list containing the bfs sequence
     return list(nx.bfs_tree(G, start_id))
+
 
 def encode_adj(adj, max_prev_node=10, is_full=False):
     '''
@@ -225,12 +285,7 @@ class Graph_sequence_sampler_pytorch(torch.utils.data.Dataset):
         G = nx.from_numpy_matrix(adj_copy_matrix)
         # then do bfs in the permuted G
         start_idx = np.random.randint(adj_copy.shape[0])
-
-        ### Apr 9: This starts bfs at the node with max degree
-        ### in case of a tie, it picks the node with lower id
-        x_idx = np.array(bfs(G, None, max_degree=True))
-        # x_idx = np.array(bfs(G, start_idx))
-        
+        x_idx = np.array(bfs(G, start_idx))
         adj_copy = adj_copy[np.ix_(x_idx, x_idx)]
         adj_encoded = encode_adj(
             adj_copy.copy(), max_prev_node=self.max_prev_node)
@@ -259,12 +314,7 @@ class Graph_sequence_sampler_pytorch(torch.utils.data.Dataset):
             G = nx.from_numpy_matrix(adj_copy_matrix)
             # then do bfs in the permuted G
             start_idx = np.random.randint(adj_copy.shape[0])
-        
-            ### Apr 9: This starts bfs at the node with max degree
-            ### in case of a tie, it picks the node with lower id
-            x_idx = np.array(bfs(G, None, max_degree=True))
-            # x_idx = np.array(bfs(G, start_idx))
-        
+            x_idx = np.array(bfs(G, start_idx))
             adj_copy = adj_copy[np.ix_(x_idx, x_idx)]
             # encode adj
             adj_encoded = encode_adj_flexible(adj_copy.copy())
