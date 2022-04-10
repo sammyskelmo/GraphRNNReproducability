@@ -160,6 +160,7 @@ def canonical_node_order(G, start_id=0, mode=None):
         returns a list of graph nodes in the specified canonical order
         possible modes:
         - 'bfs_max_deg' : bfs starting from node with highest degree
+        - 'bfs_min_deg' : bfs starting from node with lowest degree
         - 'bfs_random' : bfs starting from a random node
         - 'bfs_zero': bfs starting from node 0
         - 'no_bfs': no bfs, just return the nodes in the order they are in the graph
