@@ -30,6 +30,7 @@ from LSTM_base import *
 from MLP_base import *
 from load_datasets import *
 from args import Args
+from args import Args
 # from model import *
 
 device = "cuda" if torch.cuda.is_available() else "cpu"
@@ -38,6 +39,7 @@ def manual_train_args():
     parser = argparse.ArgumentParser(description="manual_train_args")
     parser.add_argument("--note", type=str, default=None)
     parser.add_argument("--graph_type", type=str, default=None)
+    parser.add_argument("--bfs_mode", type=str, default=None)
 
     manual_args = parser.parse_args()
     return manual_args
@@ -446,11 +448,12 @@ def test_train_MLP_Jasper(args):
     elif args.graph_type.startswith('community'):
         num_communities = int(args.graph_type[-1])
         print('Creating dataset with ', num_communities, ' communities')
-        c_sizes = np.random.choice([12, 13, 14, 15, 16, 17], num_communities)
+        # c_sizes = np.random.choice([12, 13, 14, 15, 16, 17], num_communities)
         # c_sizes = [15] * num_communities
         graphs = []
-        for k in range(3000):
-            graphs.append(n_community(c_sizes, p_inter=0.01))
+        for k in range(500):
+            c_sizes = list(np.random.choice(range(30, 81), 1)) * num_communities
+            graphs.append(n_community(c_sizes, p_inter=0.05))
         args.max_prev_node = 80
     else:
         print('no dataset')
@@ -479,7 +482,7 @@ def test_train_MLP_Jasper(args):
     print('max previous node: {}'.format(args.max_prev_node))
 
     dataset = Graph_sequence_sampler_pytorch(graphs_train, max_prev_node=args.max_prev_node,
-                                             max_num_node=args.max_num_node)
+                                             max_num_node=args.max_num_node, bfs_mode=args.bfs_mode)
 
     sample_strategy = torch.utils.data.sampler.WeightedRandomSampler([1.0 / len(dataset) for i in range(len(dataset))],
                                                                      num_samples=args.batch_size * args.batch_ratio,
@@ -598,11 +601,12 @@ def test_train_rnn_Penny(args):
     elif args.graph_type.startswith('community'):
         num_communities = int(args.graph_type[-1])
         print('Creating dataset with ', num_communities, ' communities')
-        c_sizes = np.random.choice([12, 13, 14, 15, 16, 17], num_communities)
+        # c_sizes = np.random.choice([12, 13, 14, 15, 16, 17], num_communities)
         # c_sizes = [15] * num_communities
         graphs = []
-        for k in range(3000):
-            graphs.append(n_community(c_sizes, p_inter=0.01))
+        for k in range(500):
+            c_sizes = list(np.random.choice(range(30, 81), 1)) * num_communities
+            graphs.append(n_community(c_sizes, p_inter=0.05))
         args.max_prev_node = 80
     else:
         print('no dataset')
@@ -628,7 +632,7 @@ def test_train_rnn_Penny(args):
     print('max previous node: {}'.format(args.max_prev_node))
 
     dataset = Graph_sequence_sampler_pytorch(graphs_train, max_prev_node=args.max_prev_node,
-                                             max_num_node=args.max_num_node)
+                                             max_num_node=args.max_num_node, bfs_mode=args.bfs_mode)
 
     sample_strategy = torch.utils.data.sampler.WeightedRandomSampler([1.0 / len(dataset) for i in range(len(dataset))],
                                                                      num_samples=args.batch_size * args.batch_ratio,
@@ -708,7 +712,9 @@ if __name__ == '__main__':
         args.note = manual_args.note
     if manual_args.graph_type is not None:
         args.graph_type = manual_args.graph_type
-    print('note:', args.note, 'graph_type:', args.graph_type)
+    if manual_args.bfs_mode is not None:
+        args.bfs_mode = manual_args.bfs_mode
+    print('note:', args.note, 'graph_type:', args.graph_type, 'bfs_mode:', args.bfs_mode)
     if manual_args.graph_type == 'loop':
         for g_type in ['community4', 'grid', 'citeseer', 'DD']:
             args.graph_type = g_type
