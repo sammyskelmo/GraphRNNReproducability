@@ -1,0 +1,2 @@
+class GRU_base():
+    
