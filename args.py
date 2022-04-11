@@ -43,6 +43,7 @@ class Args():
         # if none, then auto calculate
         self.max_num_node = None # max number of nodes in a graph
         self.max_prev_node = None # max previous node that looks back
+        self.bfs_mode = None # default
 
         ### network config
         ## GraphRNN
@@ -65,10 +66,10 @@ class Args():
         self.num_workers = 4 # num workers to load data, default 4
         self.batch_ratio = 32 # how many batches of samples per epoch, default 32, e.g., 1 epoch = 32 batches
         self.epochs = 3000 # now one epoch means self.batch_ratio x batch_size
-        self.epochs_test_start = 500
-        self.epochs_test = 500
+        self.epochs_test_start = 600
+        self.epochs_test = 600
         self.epochs_log = 10
-        self.epochs_save = 1000
+        self.epochs_save = 600
 
         self.lr = 0.003
         self.milestones = [400, 1000]
