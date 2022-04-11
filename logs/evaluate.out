@@ -1,0 +1,559 @@
+---------------------------graphs/GraphRNN_RNN_grid_4_128_pred_600_1.dat----------------------------
+20 20
+-------------------------
+[ 3.71158498 10.31152951  5.15576476  0.         22.19540241 22.19540241
+  9.53032374  3.17677458  3.44417978  0.          0.          0.
+  0.          0.          0.        ]
+...
+[3.71376464e+00 1.06546948e+01 5.32734742e+00 7.77947547e-02
+ 2.70753015e+01 2.70753015e+01 1.10491975e+01 3.68306583e+00
+ 1.83338676e+00 1.60725510e-01 3.21451019e-01 1.60725510e-01
+ 1.41184464e-02 1.41184464e-02 0.00000000e+00]
+-------------------------
+deg:  0.08588441312412876
+clustering:  0.015048964818448862
+orbits:  0.05708979027393268
+**********************graphs/GraphRNN_RNN_grid_4_128_pred_1200_1.dat not found**********************
+---------------------------graphs/GraphRNN_RNN_grid_4_128_pred_3000_1.dat---------------------------
+20 20
+-------------------------
+[ 3.71158498 10.31152951  5.15576476  0.         22.19540241 22.19540241
+  9.53032374  3.17677458  3.44417978  0.          0.          0.
+  0.          0.          0.        ]
+...
+[3.79475138e+00 1.10342541e+01 5.51712707e+00 6.50552486e-02
+ 2.65787293e+01 2.65787293e+01 1.13664365e+01 3.78881215e+00
+ 2.87734807e+00 1.54558011e-01 3.09116022e-01 1.54558011e-01
+ 7.45856354e-03 7.45856354e-03 0.00000000e+00]
+-------------------------
+deg:  0.03761648303462328
+clustering:  0.008592946196845919
+orbits:  0.04711169575356999
+*******************graphs/GraphRNN_RNN_community2_4_128_pred_600_1.dat not found********************
+*******************graphs/GraphRNN_RNN_community2_4_128_pred_1200_1.dat not found*******************
+------------------------graphs/GraphRNN_RNN_community2_4_128_pred_3000_1.dat------------------------
+Creating dataset with  2  communities
+100 20
+-------------------------
+[  41.35525148  694.46776807  347.23388404  550.963622   8973.09780477
+ 8973.09780477 3074.70682344 1024.90227448 2455.54453532 3833.0201597
+ 7666.0403194  3833.0201597  4992.6727716  4992.6727716  3693.95001312]
+...
+[  16.01341165  257.0266092   128.5133046    28.30986404 3601.27168022
+ 3601.27168022 1838.76531021  612.92177007  340.30869652  389.41147274
+  778.82294547  389.41147274   88.59884195   88.59884195    8.05744624]
+-------------------------
+deg:  0.24592327234312503
+clustering:  1.8612612210152435
+orbits:  0.06452741709247513
+*******************graphs/GraphRNN_RNN_community4_4_128_pred_600_1.dat not found********************
+*******************graphs/GraphRNN_RNN_community4_4_128_pred_1200_1.dat not found*******************
+*******************graphs/GraphRNN_RNN_community4_4_128_pred_3000_1.dat not found*******************
+********************graphs/GraphRNN_RNN_citeseer_4_128_pred_600_1.dat not found*********************
+-------------------------graphs/GraphRNN_RNN_citeseer_4_128_pred_1200_1.dat-------------------------
+152 20
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+-------------------------
+[2.91914430e+00 2.45271143e+01 1.22635571e+01 9.76592197e-01
+ 4.63002543e+01 4.63002543e+01 4.21702964e+02 1.40567655e+02
+ 1.09943574e+00 6.21401323e+00 1.24280265e+01 6.21401323e+00
+ 6.46004245e-01 6.46004245e-01 8.59490473e-02]
+...
+[2.60905125e+00 7.62000029e+00 3.81000014e+00 1.44286177e-01
+ 2.07254480e+01 2.07254480e+01 2.13519020e+01 7.11730066e+00
+ 2.87627208e-01 4.92068852e-01 9.84137704e-01 4.92068852e-01
+ 2.35052179e-02 2.35052179e-02 2.25235722e-03]
+-------------------------
+deg:  0.5720743944959108
+clustering:  1.2931479558986516
+orbits:  0.6240963393065209
+********************graphs/GraphRNN_RNN_citeseer_4_128_pred_3000_1.dat not found********************
+----------------------------graphs/GraphRNN_RNN_DD_4_128_pred_600_1.dat-----------------------------
+Loaded 1178 graphs for dataset DD
+184 20
+-------------------------
+[ 4.9044294  11.77959108  5.88979554  5.04243086 29.21424381 29.21424381
+  6.40662845  2.13554282  0.76017308  7.21654067 14.43308135  7.21654067
+  3.75700954  3.75700954  1.65002866]
+...
+[ 5.11210323 20.482821   10.2414105   2.57231303 77.97390455 77.97390455
+ 35.62907665 11.87635888  3.02454142  7.6865751  15.3731502   7.6865751
+  1.67613895  1.67613895  0.32432073]
+-------------------------
+deg:  0.10218459076369046
+clustering:  1.5508051768181907
+orbits:  0.8192438979950349
+***********************graphs/GraphRNN_RNN_DD_4_128_pred_1200_1.dat not found***********************
+***********************graphs/GraphRNN_RNN_DD_4_128_pred_3000_1.dat not found***********************
+-----------------------graphs/GraphRNN_RNN_bfs_min_grid_4_128_pred_600_1.dat------------------------
+20 20
+-------------------------
+[ 3.71158498 10.31152951  5.15576476  0.         22.19540241 22.19540241
+  9.53032374  3.17677458  3.44417978  0.          0.          0.
+  0.          0.          0.        ]
+...
+[3.74509052e+00 1.06195372e+01 5.30976862e+00 6.81818182e-04
+ 2.37626064e+01 2.37626064e+01 1.02431535e+01 3.41438451e+00
+ 3.32873842e+00 1.36363636e-03 2.72727273e-03 1.36363636e-03
+ 0.00000000e+00 0.00000000e+00 0.00000000e+00]
+-------------------------
+deg:  0.005748704499536572
+clustering:  1.1898751914873884e-06
+orbits:  0.006207505400825042
+******************graphs/GraphRNN_RNN_bfs_min_grid_4_128_pred_1200_1.dat not found******************
+******************graphs/GraphRNN_RNN_bfs_min_grid_4_128_pred_3000_1.dat not found******************
+-----------------------graphs/GraphRNN_RNN_bfs_ran_grid_4_128_pred_600_1.dat------------------------
+20 20
+-------------------------
+[ 3.71158498 10.31152951  5.15576476  0.         22.19540241 22.19540241
+  9.53032374  3.17677458  3.44417978  0.          0.          0.
+  0.          0.          0.        ]
+...
+[3.74585635e+00 1.06809392e+01 5.34046961e+00 6.46408840e-02
+ 2.59892265e+01 2.59892265e+01 1.07096685e+01 3.56988950e+00
+ 2.32817680e+00 1.24171271e-01 2.48342541e-01 1.24171271e-01
+ 7.18232044e-03 7.18232044e-03 0.00000000e+00]
+-------------------------
+deg:  0.033102849413735536
+clustering:  0.013282742828601535
+orbits:  0.03460684954799209
+******************graphs/GraphRNN_RNN_bfs_ran_grid_4_128_pred_1200_1.dat not found******************
+******************graphs/GraphRNN_RNN_bfs_ran_grid_4_128_pred_3000_1.dat not found******************
+-----------------------graphs/GraphRNN_RNN_bfs_max_grid_4_128_pred_600_1.dat------------------------
+20 20
+-------------------------
+[ 3.71158498 10.31152951  5.15576476  0.         22.19540241 22.19540241
+  9.53032374  3.17677458  3.44417978  0.          0.          0.
+  0.          0.          0.        ]
+...
+[3.46370339e+00 9.24621469e+00 4.62310734e+00 1.39097556e-01
+ 2.20291454e+01 2.20291454e+01 8.99735256e+00 2.99911752e+00
+ 1.50270279e+00 2.19190924e-01 4.38381848e-01 2.19190924e-01
+ 1.69485285e-02 1.69485285e-02 0.00000000e+00]
+-------------------------
+deg:  0.20775722999962043
+clustering:  0.15111307530211437
+orbits:  0.007033226704268314
+******************graphs/GraphRNN_RNN_bfs_max_grid_4_128_pred_1200_1.dat not found******************
+******************graphs/GraphRNN_RNN_bfs_max_grid_4_128_pred_3000_1.dat not found******************
+------------------------graphs/GraphRNN_RNN_bfs_no_grid_4_128_pred_600_1.dat------------------------
+20 20
+-------------------------
+[ 3.71158498 10.31152951  5.15576476  0.         22.19540241 22.19540241
+  9.53032374  3.17677458  3.44417978  0.          0.          0.
+  0.          0.          0.        ]
+...
+[2.08231971 3.29411167 1.64705583 0.01272645 4.82222624 4.82222624
+ 2.33630384 0.77876795 0.02061049 0.0226014  0.0452028  0.0226014
+ 0.         0.         0.        ]
+-------------------------
+deg:  1.4874960288256578
+clustering:  0.0018702583027243591
+orbits:  0.6619626968900261
+******************graphs/GraphRNN_RNN_bfs_no_grid_4_128_pred_1200_1.dat not found*******************
+******************graphs/GraphRNN_RNN_bfs_no_grid_4_128_pred_3000_1.dat not found*******************
+---------------------------graphs/GraphRNN_MLP_grid_4_128_pred_600_1.dat----------------------------
+20 20
+-------------------------
+[ 3.71158498 10.31152951  5.15576476  0.         22.19540241 22.19540241
+  9.53032374  3.17677458  3.44417978  0.          0.          0.
+  0.          0.          0.        ]
+...
+[ 3.63365966 11.8159012   5.9079506   0.12747737 37.62497127 37.62497127
+ 18.37976015  6.12658672  2.49923364  0.62169811  1.24339623  0.62169811
+  0.0408908   0.0408908   0.        ]
+-------------------------
+deg:  0.3720442377903106
+clustering:  0.007165869043885165
+orbits:  0.18133696070803818
+**********************graphs/GraphRNN_MLP_grid_4_128_pred_1200_1.dat not found**********************
+---------------------------graphs/GraphRNN_MLP_grid_4_128_pred_3000_1.dat---------------------------
+20 20
+-------------------------
+[ 3.71158498 10.31152951  5.15576476  0.         22.19540241 22.19540241
+  9.53032374  3.17677458  3.44417978  0.          0.          0.
+  0.          0.          0.        ]
+...
+[3.65914496e+00 1.06301826e+01 5.31509132e+00 9.25544592e-03
+ 2.69583500e+01 2.69583500e+01 1.15903961e+01 3.86346535e+00
+ 2.21423506e+00 1.75797273e-02 3.51594547e-02 1.75797273e-02
+ 1.71226285e-03 1.71226285e-03 0.00000000e+00]
+-------------------------
+deg:  0.1136459202013631
+clustering:  0.00031340386371025986
+orbits:  0.05409457653083516
+*******************graphs/GraphRNN_MLP_community2_4_128_pred_600_1.dat not found********************
+*******************graphs/GraphRNN_MLP_community2_4_128_pred_1200_1.dat not found*******************
+------------------------graphs/GraphRNN_MLP_community2_4_128_pred_3000_1.dat------------------------
+Creating dataset with  2  communities
+100 20
+-------------------------
+[  41.48093367  700.74878947  350.37439473  556.07452333 9087.47841669
+ 9087.47841669 3118.46299267 1039.48766422 2491.73005721 3885.28159161
+ 7770.56318322 3885.28159161 5062.48841054 5062.48841054 3752.8696264 ]
+...
+[  8.31397127  60.30423913  30.15211957   6.68098602 365.91656056
+ 365.91656056 193.5181677   64.5060559   36.51154503  41.91764752
+  83.83529503  41.91764752  11.3585986   11.3585986    1.21536491]
+-------------------------
+deg:  0.7993361352454631
+clustering:  1.9408096702936046
+orbits:  0.1991652987611096
+*******************graphs/GraphRNN_MLP_community4_4_128_pred_600_1.dat not found********************
+*******************graphs/GraphRNN_MLP_community4_4_128_pred_1200_1.dat not found*******************
+*******************graphs/GraphRNN_MLP_community4_4_128_pred_3000_1.dat not found*******************
+********************graphs/GraphRNN_MLP_citeseer_4_128_pred_600_1.dat not found*********************
+********************graphs/GraphRNN_MLP_citeseer_4_128_pred_1200_1.dat not found********************
+-------------------------graphs/GraphRNN_MLP_citeseer_4_128_pred_3000_1.dat-------------------------
+152 20
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+Self loops (edge from x to x) are not allowed.
+-------------------------
+[2.91914430e+00 2.45271143e+01 1.22635571e+01 9.76592197e-01
+ 4.63002543e+01 4.63002543e+01 4.21702964e+02 1.40567655e+02
+ 1.09943574e+00 6.21401323e+00 1.24280265e+01 6.21401323e+00
+ 6.46004245e-01 6.46004245e-01 8.59490473e-02]
+...
+[  3.84330947  30.78354339  15.39177169   2.40725388  63.84219367
+  63.84219367 367.96123621 122.6537454    5.63037037  20.45261004
+  40.90522009  20.45261004   4.60290009   4.60290009   0.38339937]
+-------------------------
+deg:  0.13755187649958223
+clustering:  0.05832047418984154
+orbits:  0.1915585485965624
+***********************graphs/GraphRNN_MLP_DD_4_128_pred_600_1.dat not found************************
+***********************graphs/GraphRNN_MLP_DD_4_128_pred_1200_1.dat not found***********************
+----------------------------graphs/GraphRNN_MLP_DD_4_128_pred_3000_1.dat----------------------------
+Loaded 1178 graphs for dataset DD
+184 20
+-------------------------
+[ 4.9044294  11.77959108  5.88979554  5.04243086 29.21424381 29.21424381
+  6.40662845  2.13554282  0.76017308  7.21654067 14.43308135  7.21654067
+  3.75700954  3.75700954  1.65002866]
+...
+[ 3.90275935  8.24734248  4.12367124  3.13970409 12.7756427  12.7756427
+  5.86320104  1.95440035  2.01120585  3.79191424  7.58382848  3.79191424
+  2.21886274  2.21886274  0.71519273]
+-------------------------
+deg:  0.2842499020411149
+clustering:  0.3478228939030691
+orbits:  0.29930306109598126
+-----------------------graphs/GraphRNN_MLP_bfs_min_grid_4_128_pred_600_1.dat------------------------
+20 20
+-------------------------
+[ 3.71158498 10.31152951  5.15576476  0.         22.19540241 22.19540241
+  9.53032374  3.17677458  3.44417978  0.          0.          0.
+  0.          0.          0.        ]
+...
+[3.53274683e+00 9.75247851e+00 4.87623925e+00 4.78243738e-02
+ 2.31783211e+01 2.31783211e+01 9.79696493e+00 3.26565498e+00
+ 2.12640284e+00 9.09625618e-02 1.81925124e-01 9.09625618e-02
+ 5.29516994e-03 5.29516994e-03 0.00000000e+00]
+-------------------------
+deg:  0.13964899877780867
+clustering:  0.012060446894218702
+orbits:  0.004687526194240732
+******************graphs/GraphRNN_MLP_bfs_min_grid_4_128_pred_1200_1.dat not found******************
+******************graphs/GraphRNN_MLP_bfs_min_grid_4_128_pred_3000_1.dat not found******************
+-----------------------graphs/GraphRNN_MLP_bfs_ran_grid_4_128_pred_600_1.dat------------------------
+20 20
+-------------------------
+[ 3.71158498 10.31152951  5.15576476  0.         22.19540241 22.19540241
+  9.53032374  3.17677458  3.44417978  0.          0.          0.
+  0.          0.          0.        ]
+...
+[3.73867263e+00 1.09906230e+01 5.49531150e+00 8.72334302e-03
+ 2.75449072e+01 2.75449072e+01 1.19084263e+01 3.96947542e+00
+ 2.50106684e+00 1.69863498e-02 3.39726995e-02 1.69863498e-02
+ 1.55585304e-03 1.55585304e-03 0.00000000e+00]
+-------------------------
+deg:  0.08472208910344392
+clustering:  0.00019340777921228458
+orbits:  0.06963732273585688
+******************graphs/GraphRNN_MLP_bfs_ran_grid_4_128_pred_1200_1.dat not found******************
+******************graphs/GraphRNN_MLP_bfs_ran_grid_4_128_pred_3000_1.dat not found******************
+-----------------------graphs/GraphRNN_MLP_bfs_max_grid_4_128_pred_600_1.dat------------------------
+20 20
+-------------------------
+[ 3.71158498 10.31152951  5.15576476  0.         22.19540241 22.19540241
+  9.53032374  3.17677458  3.44417978  0.          0.          0.
+  0.          0.          0.        ]
+...
+[3.75596464e+00 1.12507307e+01 5.62536536e+00 2.86267492e-02
+ 2.93133884e+01 2.93133884e+01 1.27880309e+01 4.26267696e+00
+ 2.27967733e+00 6.83170002e-02 1.36634000e-01 6.83170002e-02
+ 3.87046418e-03 3.87046418e-03 0.00000000e+00]
+-------------------------
+deg:  0.150761811265109
+clustering:  0.0018347174191706284
+orbits:  0.12313353487138268
+******************graphs/GraphRNN_MLP_bfs_max_grid_4_128_pred_1200_1.dat not found******************
+******************graphs/GraphRNN_MLP_bfs_max_grid_4_128_pred_3000_1.dat not found******************
+------------------------graphs/GraphRNN_MLP_bfs_no_grid_4_128_pred_600_1.dat------------------------
+20 20
+-------------------------
+[ 3.71158498 10.31152951  5.15576476  0.         22.19540241 22.19540241
+  9.53032374  3.17677458  3.44417978  0.          0.          0.
+  0.          0.          0.        ]
+...
+[2.11419537e+00 3.41299267e+00 1.70649633e+00 2.18570741e-02
+ 5.16583705e+00 5.16583705e+00 2.38932340e+00 7.96441135e-01
+ 3.82418371e-02 3.27287402e-02 6.54574804e-02 3.27287402e-02
+ 9.09090909e-04 9.09090909e-04 0.00000000e+00]
+-------------------------
+deg:  1.4647085074272401
+clustering:  0.006602750818131664
+orbits:  0.643642789004929
+******************graphs/GraphRNN_MLP_bfs_no_grid_4_128_pred_1200_1.dat not found*******************
+******************graphs/GraphRNN_MLP_bfs_no_grid_4_128_pred_3000_1.dat not found*******************
