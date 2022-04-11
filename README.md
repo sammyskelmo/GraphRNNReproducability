@@ -37,4 +37,7 @@ CUDA_VISIBLE_DEVICES=3 nohup python -u train.py --note GraphRNN_RNN_bfs_no --gra
 ```
 python evaluate.py
 ```
+## Bibliography
+
+As mentioned in our group report, some  portions of our code base were sourced from the official GitHub repository of the paper. This can be found at the following link: https://github.com/snap-stanford/GraphRNN. We also gained fundamental technical understanding through a wide body of existing literature, as cited in our written paper that was submitted for examination. 
 
