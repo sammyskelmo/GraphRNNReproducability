@@ -23,14 +23,14 @@ CUDA_VISIBLE_DEVICES=2 nohup python -u train.py --note GraphRNN_RNN --graph_type
 
 ### Different BFS
 ```
-CUDA_VISIBLE_DEVICES=0 nohup python -u train.py --note GraphRNN_MLP_bfs_min --graph_type grid &> logs/train_MLP_min_grid.out&
-CUDA_VISIBLE_DEVICES=0 nohup python -u train.py --note GraphRNN_RNN_bfs_min --graph_type grid &> logs/train_RNN_min_grid.out&
-CUDA_VISIBLE_DEVICES=1 nohup python -u train.py --note GraphRNN_MLP_bfs_ran --graph_type grid &> logs/train_MLP_ran_grid.out&
-CUDA_VISIBLE_DEVICES=1 nohup python -u train.py --note GraphRNN_RNN_bfs_ran --graph_type grid &> logs/train_RNN_ran_grid.out&
-CUDA_VISIBLE_DEVICES=2 nohup python -u train.py --note GraphRNN_MLP_bfs_max --graph_type grid &> logs/train_MLP_max_grid.out&
-CUDA_VISIBLE_DEVICES=2 nohup python -u train.py --note GraphRNN_RNN_bfs_max --graph_type grid &> logs/train_RNN_max_grid.out&
-CUDA_VISIBLE_DEVICES=3 nohup python -u train.py --note GraphRNN_MLP_bfs_no --graph_type grid &> logs/train_MLP_no_grid.out&
-CUDA_VISIBLE_DEVICES=3 nohup python -u train.py --note GraphRNN_RNN_bfs_no --graph_type grid &> logs/train_RNN_no_grid.out&
+CUDA_VISIBLE_DEVICES=0 nohup python -u train.py --note GraphRNN_MLP_bfs_min --graph_type grid --bfs_mode bfs_min_deg &> logs/train_MLP_min_grid.out&
+CUDA_VISIBLE_DEVICES=0 nohup python -u train.py --note GraphRNN_RNN_bfs_min --graph_type grid --bfs_mode bfs_min_deg &> logs/train_RNN_min_grid.out&
+CUDA_VISIBLE_DEVICES=1 nohup python -u train.py --note GraphRNN_MLP_bfs_ran --graph_type grid --bfs_mode bfs_random &> logs/train_MLP_ran_grid.out&
+CUDA_VISIBLE_DEVICES=1 nohup python -u train.py --note GraphRNN_RNN_bfs_ran --graph_type grid --bfs_mode bfs_random &> logs/train_RNN_ran_grid.out&
+CUDA_VISIBLE_DEVICES=2 nohup python -u train.py --note GraphRNN_MLP_bfs_max --graph_type grid --bfs_mode bfs_max_deg &> logs/train_MLP_max_grid.out&
+CUDA_VISIBLE_DEVICES=2 nohup python -u train.py --note GraphRNN_RNN_bfs_max --graph_type grid --bfs_mode bfs_max_deg &> logs/train_RNN_max_grid.out&
+CUDA_VISIBLE_DEVICES=3 nohup python -u train.py --note GraphRNN_MLP_bfs_no --graph_type grid --bfs_mode no_bfs &> logs/train_MLP_no_grid.out&
+CUDA_VISIBLE_DEVICES=3 nohup python -u train.py --note GraphRNN_RNN_bfs_no --graph_type grid --bfs_mode no_bfs &> logs/train_RNN_no_grid.out&
 ```
 
 ## Evaluate
