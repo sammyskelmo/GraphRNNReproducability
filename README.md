@@ -36,6 +36,8 @@ CUDA_VISIBLE_DEVICES=3 nohup python -u train.py --note GraphRNN_RNN_bfs_no --gra
 ## Evaluate
 ```
 python evaluate.py
+nohup python -u evaluate.py &> logs/evaluate.out&
+
 ```
 ## Bibliography
 
