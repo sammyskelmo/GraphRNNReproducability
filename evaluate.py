@@ -46,9 +46,15 @@ def evaluate_model(graph_ref_list, graph_pred_list, num_pred_samples=20):
 
 
 def test_evaluate_model(pred_name, graph_type):
+    if 'community4' in graph_type:
+        graph_type = 'community4'
+    if 'community2' in graph_type:
+        graph_type = 'community2'
+    if 'grid' in graph_type:
+        graph_type = 'grid'
     # pred_name = "graphs/GraphRNN_RNN_grid_4_128_pred_10_1.dat"  # load a model
     pred_graphs = utils.load_graph_list(pred_name)
-    if 'grid' in graph_type:
+    if graph_type == 'grid':
         graphs = []
         for i in range(10, 20):
             for j in range(10, 20):
@@ -87,11 +93,12 @@ def test_evaluate_model(pred_name, graph_type):
     elif graph_type.startswith('community'):
         num_communities = int(graph_type[-1])
         print('Creating dataset with ', num_communities, ' communities')
-        c_sizes = np.random.choice([12, 13, 14, 15, 16, 17], num_communities)
+        # c_sizes = np.random.choice([12, 13, 14, 15, 16, 17], num_communities)
         # c_sizes = [15] * num_communities
         graphs = []
-        for k in range(3000):
-            graphs.append(n_community(c_sizes, p_inter=0.01))
+        for k in range(500):
+            c_sizes = list(np.random.choice(range(30, 81), 1)) * num_communities
+            graphs.append(n_community(c_sizes, p_inter=0.05))
     else:
         print('no dataset')
     ref_graphs = graphs
@@ -104,14 +111,15 @@ def test_evaluate_model(pred_name, graph_type):
 if __name__ == '__main__':
     # model_list = []
     note_list = ['GraphRNN_RNN', 'GraphRNN_MLP']
-    dataset_list = ['grid', 'community4', 'citeseer', 'DD', 'bfs_min_grid', 'bfs_ran_grid', 'bfs_max_grid', 'bfs_no_grid']
-    epoch = 500
+    dataset_list = ['grid', 'community2', 'community4', 'citeseer', 'DD', 'bfs_min_grid', 'bfs_ran_grid', 'bfs_max_grid', 'bfs_no_grid']
+    epoch = 600
     # model_name = "graphs/GraphRNN_RNN_grid_4_128_pred_10_1.dat"
     for _note in note_list:
         for _dataset in dataset_list:
-            pred_name = 'graphs/' + _note + '_' + _dataset + '_4_128_pred_' + str(epoch) + '_1.dat'
-            if os.path.exists(pred_name):
-                print("{:-^60s}".format(pred_name))
-                test_evaluate_model(pred_name, _dataset)
-            else:
-                print("{:*^60s}".format(pred_name + ' not found'))
+            for epoch in [600, 1200, 3000]:
+                pred_name = 'graphs/' + _note + '_' + _dataset + '_4_128_pred_' + str(epoch) + '_1.dat'
+                if os.path.exists(pred_name):
+                    print("{:-^100s}".format(pred_name))
+                    test_evaluate_model(pred_name, _dataset)
+                else:
+                    print("{:*^100s}".format(pred_name + ' not found'))
