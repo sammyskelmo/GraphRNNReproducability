@@ -71,7 +71,6 @@ class GRU_base(nn.Module):
         ''' caution: the output tensor needs to be sent to the right device '''
         return Variable(torch.zeros(self.num_layers, batch_size, self.hidden_size)).to(device)
 
-    ### TODO : add pack_padded_sequence, understand what packing is for and does
     def forward(self, base_input, pack=False, input_len=None):
         if self.prepend_linear_layer:
             input = F.relu(self.input(base_input))
